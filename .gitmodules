@@ -1,0 +1,9 @@
+[submodule "tools/binutils-gdb"]
+	path = tools/binutils-gdb
+	url = git://sourceware.org/git/binutils-gdb.git
+[submodule "tools/gcc"]
+	path = tools/gcc
+	url = git://gcc.gnu.org/git/gcc.git
+[submodule "tools/grub"]
+	path = tools/grub
+	url = git://git.savannah.gnu.org/grub.git
