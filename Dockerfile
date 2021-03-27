@@ -25,7 +25,7 @@ WORKDIR /tmp/suite
 COPY tools ./
 
 # Install binutils.
-cd tools/binutils-gdb && \
+RUN cd tools/binutils-gdb && \
 	mkdir build && \
 	cd build && \
 	../configure \
@@ -44,7 +44,7 @@ cd tools/binutils-gdb && \
 ENV PATH="${PATH}:/usr/local/x86_64-elf/bin"
 
 # Install GCC.
-cd tools/gcc && \
+RUN cd tools/gcc && \
 	mkdir build && \
 	cd build && \
 	../configure \
@@ -68,7 +68,7 @@ cd tools/gcc && \
 RUN ln -s /bin/python2 /bin/python
 
 # Install GRUB2.
-cd tools/grub && \
+RUN cd tools/grub && \
 	./bootstrap && \
 	./autogen.sh && \
 	mkdir build && \
