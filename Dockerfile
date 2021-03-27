@@ -85,4 +85,4 @@ RUN cd tools/grub && \
 	make && \
 	make install	
 
-ENTRYPOINT["/bin/bash"]
+ENTRYPOINT ["/bin/bash"]
