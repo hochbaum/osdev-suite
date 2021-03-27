@@ -1,14 +1,13 @@
 FROM debian:stable
 LABEL maintainer "Linus Hochbaum <linus@hochbaum.dev>"
 
-RUN apt install -y \
+RUN apt update && apt install -y \
 	git \
 	build-essential \
 	ninja-build \
 	libgmp-dev \
 	libmpfr-dev \
 	libmpc-dev \
-	makeinfo \
 	texinfo \
 	bison \
 	flex \
