@@ -81,7 +81,7 @@ RUN cd tools/grub && \
 		TARGET_RANLIB=x86_64-elf-ranlb \
 		--disable-werror \
 		--prefix=x86_64-elf \
-		--target=x86_64-elf \ && \
+		--target=x86_64-elf && \
 	make && \
 	make install	
 
