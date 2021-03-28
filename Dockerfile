@@ -16,20 +16,23 @@ RUN apt update && apt install -y \
 	pkg-config \
 	ninja-build \
 	xorriso \
-	python2 \
-	nasm
+	python \
+	nasm \
+	zlib1g-dev \
+	gettext \
+	autopoint
 
 RUN mkdir /tmp/suite
 WORKDIR /tmp/suite
 COPY tools ./
 
 # Install binutils.
-RUN cd tools/binutils-gdb && \
+RUN cd binutils-gdb && \
 	mkdir build && \
 	cd build && \
 	../configure \
 		--disable-debug \
-		--diable-dependency-tracking \
+		--disable-dependency-tracking \
 		--prefix=/usr/local/x86_64-elf \
 		--target=x86_64-elf \
 		--disable-nls \
@@ -43,7 +46,7 @@ RUN cd tools/binutils-gdb && \
 ENV PATH="${PATH}:/usr/local/x86_64-elf/bin"
 
 # Install GCC.
-RUN cd tools/gcc && \
+RUN cd gcc && \
 	mkdir build && \
 	cd build && \
 	../configure \
@@ -52,8 +55,8 @@ RUN cd tools/gcc && \
 		--enable-languages=c \
 		--with-gnu-as \
 		--with-gnu-ld \
-		--with-ld=x86_64-elf-ld \
-		--with-as=x86_64-elf-as \
+		--with-ld=/usr/local/x86_64-elf/bin/x86_64-elf-ld \
+		--with-as=/usr/local/x86_64-elf/bin/x86_64-elf-as \
 		--disable-nls \
 		--without-headers \
 		--with-system-zlib && \
@@ -62,26 +65,22 @@ RUN cd tools/gcc && \
 	make install-gcc && \
 	make install-target-libgcc
 
-# Small workaround to make sure we have a basic 'python' binary. GRUB's
-# autoreconf.sh uses it. 
-RUN ln -s /bin/python2 /bin/python
-
 # Install GRUB2.
-RUN cd tools/grub && \
+RUN cd grub && \
 	./bootstrap && \
-	./autogen.sh && \
 	mkdir build && \
 	cd build && \
 	../configure \
-		TARGET_CC=x86_64-elf-gcc \
-		TARGET_OBJCOPY=x86_64-elf-objcopy \
-		TARGET_NM=x86_64-elf-nm \
-		TARGET_STRIP=x86_64-elf-strip \
-		TARGET_RANLIB=x86_64-elf-ranlb \
+		TARGET_CC=/usr/local/x86_64-elf/bin/x86_64-elf-gcc \
+		TARGET_OBJCOPY=/usr/local/x86_64-elf/bin/x86_64-elf-objcopy \
+		TARGET_NM=/usr/local/x86_64-elf/bin/x86_64-elf-nm \
+		TARGET_STRIP=/usr/local/x86_64-elf/bin/x86_64-elf-strip \
+		TARGET_RANLIB=/usr/local/x86_64-elf/bin/x86_64-elf-ranlb \
 		--disable-werror \
-		--prefix=x86_64-elf \
+		--prefix=/usr/local/x86_64-elf \
 		--target=x86_64-elf && \
 	make && \
 	make install	
 
+RUN rm -rf /tmp/suite
 ENTRYPOINT ["/bin/bash"]
